@@ -3,4 +3,5 @@ project(EjerciciosColaborativos5)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(EjerciciosColaborativos5 main.cpp)
+add_executable(EjerciciosColaborativos5 main.cpp
+        Fase_2_CS/Security.h)
