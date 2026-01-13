@@ -9,6 +9,8 @@
 #include <string>
 using namespace std;
 
+class Analista;
+
 // Dato que se almacena en la cola
 struct Actividad {
     string usuario;
@@ -21,6 +23,7 @@ struct Actividad {
 };
 
 class colaActividades {
+    friend class Analista;
 protected:
     class nodoCola {
     public:
@@ -37,7 +40,7 @@ protected:
 
     //Recorrido recursivo
     void mostrarRecursivo(nodoCola* nodo, string usuario) {
-        if (nodo == NULL) return;
+        if (nodo == nullptr) return;
 
         if (nodo->elemento.usuario == usuario) {
             cout << "- " << nodo->elemento.descripcion << endl;

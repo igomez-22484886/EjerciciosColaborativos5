@@ -7,13 +7,13 @@
 #include <string>
 #include <iostream>
 
-struct Acceso {
+struct Access {
 	std::string usuario;
 	long long ts;
 
-	Acceso() : usuario(""), ts(0) {};
+	Access() : usuario(""), ts(0) {};
 
-	Acceso(std::string usuario, long long ts) {
+	Access(std::string usuario, long long ts) {
 		this->usuario = usuario;
 		this->ts = ts;
 	}
@@ -30,7 +30,7 @@ struct Acceso {
 		return "Usuario: " + usuario + " | Timestamp: " + std::to_string(ts);
 	}
 	// Operador para comparar y que pueda encontrar el duplicado
-	bool operator==(const Acceso& otro) const {
+	bool operator==(const Access& otro) const {
 		return (this->usuario == otro.usuario && this->ts == otro.ts);
 	}
 };
