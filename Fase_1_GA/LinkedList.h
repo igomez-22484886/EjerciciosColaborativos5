@@ -39,8 +39,7 @@ public:
     // se usa para asignar una lista a otra
     LinkedList &operator=(const LinkedList &other) {
         if (this != &other) {
-            // Evitar auto-asignación
-            clear(); // Vaciamos la lista actual
+            clear();
             Node *current = other.head;
             while (current != nullptr) {
                 insertAtLast(current->data);
@@ -66,6 +65,24 @@ public:
             tail = newNode;
         }
         size++;
+    }
+
+    void insertSorted(T data) {
+        head = insertSortedRec(head, data);
+        if (head == nullptr) {
+            tail = nullptr; // Lista vacia
+        } else {
+            Node* temp = head;
+            while(temp->next != nullptr) {
+                temp = temp->next;
+            }
+            tail = temp;
+        }
+        size++;
+    }
+
+    bool search(T data) {
+        return searchRec(head, data);
     }
 
     // elimina duplicados
@@ -95,6 +112,25 @@ public:
         }
     }
 
+private:
+    Node* insertSortedRec(Node* current, T data) {
+        if (current == nullptr || data < current->data) {
+            Node* newNode = new Node(data);
+            newNode->next = current;
+            return newNode;
+        }
+        
+        current->next = insertSortedRec(current->next, data);
+        return current;
+    }
+
+    bool searchRec(Node* current, T data) {
+        if (current == nullptr) return false;
+        if (current->data == data) return true;
+        return searchRec(current->next, data);
+    }
+
+public:
     // elimina un nodo de la lista buscando por su valor.
     bool remove(T data) {
         if (!head) return false;

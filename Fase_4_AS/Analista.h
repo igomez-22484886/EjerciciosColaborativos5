@@ -13,20 +13,18 @@
 
 class Analista {
 public:
-    //Recorrer lista de accesos y contar accesos por usuario
     int contarAccesos(const LinkedList<Access>& lista, const std::string& usuario) {
         return contarAccesosRec(lista.head, usuario);
     }
 
-    //Buscar actividades repetidas
-    void detectarAmenazas(const colaActividades& cola) {
-        std::cout << "--- Informe de Analisis de Amenazas ---\n";
+    void detectarAmenazas(const colaActividades& cola, long long ventanaSegundos = 300) {
+        std::cout << " Informe de Analisis de Amenazas (ventana: "
+                  << ventanaSegundos << "s) \n";
         bool amenazasEncontradas = false;
-        detectarAmenazasRec(cola.frente, amenazasEncontradas);
+        detectarAmenazasRec(cola.frente, ventanaSegundos, amenazasEncontradas);
         if (!amenazasEncontradas) {
             std::cout << "No se detectaron patrones sospechosos.\n";
         }
-        std::cout << "---------------------------------------\n";
     }
 
 private:
@@ -38,21 +36,42 @@ private:
         return count + contarAccesosRec(nodo->next, usuario);
     }
 
-    void detectarAmenazasRec(colaActividades::nodoCola* nodo, bool& amenazasEncontradas) {
-        if (nodo == nullptr || nodo->siguiente == nullptr) {
+    void detectarAmenazasRec(colaActividades::nodoCola* nodo, long long ventanaSegundos,
+                             bool& amenazasEncontradas) {
+        if (nodo == nullptr) {
             return;
         }
 
-        if (nodo->elemento.usuario == nodo->siguiente->elemento.usuario &&
-            nodo->elemento.descripcion == nodo->siguiente->elemento.descripcion) {
-            
+        buscarRepeticionRec(nodo, nodo->siguiente, ventanaSegundos, amenazasEncontradas);
+        detectarAmenazasRec(nodo->siguiente, ventanaSegundos, amenazasEncontradas);
+    }
+
+    void buscarRepeticionRec(colaActividades::nodoCola* base, colaActividades::nodoCola* actual,
+                             long long ventanaSegundos, bool& amenazasEncontradas) {
+        if (actual == nullptr) {
+            return;
+        }
+
+        long long diff = actual->elemento.ts - base->elemento.ts;
+        long long absDiff = diff < 0 ? -diff : diff;
+
+        if (diff >= 0 && diff > ventanaSegundos) {
+            return;
+        }
+
+        if (absDiff <= ventanaSegundos &&
+            base->elemento.usuario == actual->elemento.usuario &&
+            base->elemento.descripcion == actual->elemento.descripcion) {
             std::cout << "[ALERTA] Actividad sospechosa detectada:\n";
-            std::cout << "  Usuario: " << nodo->elemento.usuario << "\n";
-            std::cout << "  Actividad repetida: " << nodo->elemento.descripcion << "\n";
+            std::cout << "  Usuario: " << base->elemento.usuario << "\n";
+            std::cout << "  Actividad repetida: " << base->elemento.descripcion << "\n";
+            std::cout << "  Timestamps: " << base->elemento.ts << " y "
+                      << actual->elemento.ts << " (diferencia: " << absDiff
+                      << "s)\n";
             amenazasEncontradas = true;
         }
 
-        detectarAmenazasRec(nodo->siguiente, amenazasEncontradas);
+        buscarRepeticionRec(base, actual->siguiente, ventanaSegundos, amenazasEncontradas);
     }
 };
 

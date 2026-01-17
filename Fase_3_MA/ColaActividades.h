@@ -15,10 +15,12 @@ class Analista;
 struct Actividad {
     string usuario;
     string descripcion;
+    long long ts;
 
-    Actividad(string u = "", string d = "") {
+    Actividad(string u = "", string d = "", long long t = 0) {
         usuario = u;
         descripcion = d;
+        ts = t;
     }
 };
 
@@ -43,7 +45,7 @@ protected:
         if (nodo == nullptr) return;
 
         if (nodo->elemento.usuario == usuario) {
-            cout << "- " << nodo->elemento.descripcion << endl;
+            cout << "- " << nodo->elemento.descripcion << " (ts: " << nodo->elemento.ts << ")" << endl;
         }
 
         mostrarRecursivo(nodo->siguiente, usuario);
@@ -60,6 +62,19 @@ protected:
 public:
     colaActividades() {
         frente = final = NULL;
+    }
+
+    ~colaActividades() {
+        clear();
+    }
+
+    void clear() {
+        while (frente != NULL) {
+            nodoCola* siguiente = frente->siguiente;
+            delete frente;
+            frente = siguiente;
+        }
+        final = NULL;
     }
 
     //Insertar

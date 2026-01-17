@@ -21,13 +21,17 @@ public:
 
     void restart() {
         while (!niveles.empty()) niveles.pop();
-        niveles.push(Nivel::BAJO);
-        niveles.push(Nivel::MEDIO);
         niveles.push(Nivel::ALTO);
+        niveles.push(Nivel::MEDIO);
+        niveles.push(Nivel::BAJO);
     }
 
     void changeLevel(Nivel nuevo) {
-        replace(niveles, nuevo);
+        moveToTop(niveles, nuevo);
+    }
+
+    Nivel currentLevel() const {
+        return niveles.empty() ? Nivel::BAJO : niveles.top();
     }
 
     string requierements() const {
@@ -42,20 +46,28 @@ public:
 
 private:
     stack<Nivel> niveles;
-    void replace(stack<Nivel> &s, Nivel nuevo) {
-        if (s.empty()) {
-            s.push(nuevo);
-            return;
-        }
+
+    // funcion para mover un nivel especifico a la cima
+    void moveToTop(stack<Nivel> &s, Nivel target) {
+        if (s.empty()) return;
+        if (s.top() == target) return; // ya esta arriba
+
+        extract(s, target);
+        s.push(target);
+    }
+
+    void extract(stack<Nivel> &s, Nivel target) {
+        if (s.empty()) return;
+
         Nivel top = s.top();
         s.pop();
-        if (s.empty()) {
-            s.push(nuevo);
-        }else {
-            replace(s, nuevo);
-            s.push(nuevo);
-        }
 
+        if (top == target) {
+            // no hacemos nada
+        } else {
+            extract(s, target);
+            s.push(top);
+        }
     }
 
 };

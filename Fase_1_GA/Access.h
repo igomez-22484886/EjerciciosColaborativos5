@@ -33,5 +33,18 @@ struct Access {
 	bool operator==(const Access& otro) const {
 		return (this->usuario == otro.usuario && this->ts == otro.ts);
 	}
+
+    // Operadores para ordenacion cronologica
+    bool operator<(const Access& other) const {
+        return this->ts < other.ts;
+    }
+
+    bool operator<=(const Access& other) const {
+        return this->ts <= other.ts;
+    }
+
+    bool operator>(const Access& other) const {
+        return this->ts > other.ts;
+    }
 };
 #endif //EJERCICIOSCOLABORATIVOS5_ACCESOS_H
