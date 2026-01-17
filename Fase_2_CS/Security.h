@@ -33,10 +33,9 @@ public:
     string requierements() const {
         if (niveles.empty()) return "No hay niveles";
         switch (niveles.top()) {
-            case Nivel:BAJO: return "Pedir Usiario";
-            case Nivel:MEDIO: return "Pedir usuario y contraseña";
-            case Nivel:ALTO:  return "Pedir usuario, contraseña y teléfono";
-
+            case Nivel::BAJO: return "Pedir usuario";
+            case Nivel::MEDIO: return "Pedir usuario y contraseña";
+            case Nivel::ALTO:  return "Pedir usuario, contraseña y teléfono";
         }
         return "";
     }

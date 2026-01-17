@@ -7,8 +7,11 @@
 
 #include <iostream>
 
+class Analista;
+
 template<typename T>
 class LinkedList {
+    friend class Analista;
 private:
     struct Node {
         T data;
